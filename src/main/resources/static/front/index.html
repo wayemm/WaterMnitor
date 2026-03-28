@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>水位监控系统</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌊 水位监控系统</h1>
+            <p>实时监测 · 智能预警 · 安全守护</p>
+        </header>
+
+        <nav class="nav-tabs">
+            <button class="tab-btn active" data-tab="stations">监测站点</button>
+            <button class="tab-btn" data-tab="report">水位上报</button>
+            <button class="tab-btn" data-tab="records">历史记录</button>
+            <button class="tab-btn" data-tab="alerts">
+                警报管理
+                <span class="badge" id="alert-badge">0</span>
+            </button>
+        </nav>
+
+        <!-- 监测站点 -->
+        <section id="stations" class="tab-content active">
+            <div class="section-header">
+                <h2>📍 监测站点列表</h2>
+                <button class="btn btn-primary" onclick="openAddStationModal()">+ 新增站点</button>
+            </div>
+            <div class="stations-grid" id="stations-list">
+                <!-- 动态加载 -->
+            </div>
+        </section>
+
+        <!-- 水位上报 -->
+        <section id="report" class="tab-content">
+            <div class="section-header">
+                <h2>📡 水位数据上报</h2>
+            </div>
+            <div class="form-card">
+                <form id="report-form">
+                    <div class="form-group">
+                        <label>选择监测站点</label>
+                        <select id="report-station" required>
+                            <option value="">请选择站点</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>当前水位 (米)</label>
+                        <input type="number" id="report-level" step="0.01" min="0" placeholder="请输入水位值" required>
+                        <small class="hint">示例: 3.50 表示 3.5米</small>
+                    </div>
+                    <div class="form-group">
+                        <label>采集时间 (可选)</label>
+                        <input type="datetime-local" id="report-time">
+                    </div>
+                    <div class="alert-preview" id="alert-preview" style="display: none;">
+                        <div class="alert-box">
+                            <span class="alert-icon">⚠️</span>
+                            <span id="alert-text"></span>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">确认上报</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- 历史记录 -->
+        <section id="records" class="tab-content">
+            <div class="section-header">
+                <h2>📊 历史水位记录</h2>
+            </div>
+            <div class="filter-bar">
+                <select id="record-station">
+                    <option value="">全部站点</option>
+                </select>
+                <input type="datetime-local" id="record-start" placeholder="开始时间">
+                <input type="datetime-local" id="record-end" placeholder="结束时间">
+                <button class="btn btn-secondary" onclick="loadRecords()">查询</button>
+            </div>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>站点</th>
+                            <th>水位(m)</th>
+                            <th>采集时间</th>
+                            <th>状态</th>
+                        </tr>
+                    </thead>
+                    <tbody id="records-list">
+                        <!-- 动态加载 -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 警报管理 -->
+        <section id="alerts" class="tab-content">
+            <div class="section-header">
+                <h2>🚨 警报管理</h2>
+                <div class="filter-btns">
+                    <button class="btn btn-sm active" data-filter="all">全部</button>
+                    <button class="btn btn-sm" data-filter="0">未处理</button>
+                    <button class="btn btn-sm" data-filter="1">已处理</button>
+                </div>
+            </div>
+            <div class="alerts-list" id="alerts-list">
+                <!-- 动态加载 -->
+            </div>
+        </section>
+    </div>
+
+    <!-- 新增站点弹窗 -->
+    <div class="modal" id="station-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>新增监测站点</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="station-form">
+                <div class="form-group">
+                    <label>站点名称</label>
+                    <input type="text" id="station-name" required>
+                </div>
+                <div class="form-group">
+                    <label>地理位置</label>
+                    <input type="text" id="station-location">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>警戒水位(m)</label>
+                        <input type="number" id="station-warn" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>危险水位(m)</label>
+                        <input type="number" id="station-danger" step="0.01" min="0" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">取消</button>
+                    <button type="submit" class="btn btn-primary">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

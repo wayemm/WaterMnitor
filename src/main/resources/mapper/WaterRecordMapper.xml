@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.watermonitor.mapper.WaterRecordMapper">
+    
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO water_record (station_id, water_level, recorded_at)
+        VALUES (#{stationId}, #{waterLevel}, #{recordedAt})
+    </insert>
+    
+    <select id="findByStationIdAndTimeRange" resultType="com.example.watermonitor.model.pojo.WaterRecord">
+        SELECT id, station_id, water_level, recorded_at, created_at
+        FROM water_record
+        WHERE 1=1
+        <if test="stationId != null">
+            AND station_id = #{stationId}
+        </if>
+        <if test="startTime != null">
+            AND recorded_at &gt;= #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND recorded_at &lt;= #{endTime}
+        </if>
+        ORDER BY recorded_at DESC
+    </select>
+    
+    <select id="findLatestByStationId" resultType="com.example.watermonitor.model.pojo.WaterRecord">
+        SELECT id, station_id, water_level, recorded_at, created_at
+        FROM water_record
+        WHERE station_id = #{stationId}
+        ORDER BY recorded_at DESC
+        LIMIT 1
+    </select>
+    
+</mapper>

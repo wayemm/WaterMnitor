@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.watermonitor.mapper.AlertRecordMapper">
+    
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO alert_record (station_id, record_id, alert_type, water_level, status)
+        VALUES (#{stationId}, #{recordId}, #{alertType}, #{waterLevel}, #{status})
+    </insert>
+    
+    <select id="findAll" resultType="com.example.watermonitor.model.pojo.AlertRecord">
+        SELECT id, station_id, record_id, alert_type, water_level, status, handled_at, created_at
+        FROM alert_record
+        <where>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+        </where>
+        ORDER BY created_at DESC
+    </select>
+    
+    <select id="findById" resultType="com.example.watermonitor.model.pojo.AlertRecord">
+        SELECT id, station_id, record_id, alert_type, water_level, status, handled_at, created_at
+        FROM alert_record
+        WHERE id = #{id}
+    </select>
+    
+    <update id="updateStatus">
+        UPDATE alert_record 
+        SET status = #{status}, handled_at = NOW()
+        WHERE id = #{id}
+    </update>
+    
+</mapper>

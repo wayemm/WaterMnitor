@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.watermonitor.mapper.StationMapper">
+    
+    <select id="findAll" resultType="com.example.watermonitor.model.pojo.Station">
+        SELECT id, name, location, warn_level, danger_level, status, created_at, updated_at
+        FROM station
+        WHERE status = 1
+        ORDER BY id
+    </select>
+    
+    <select id="findById" resultType="com.example.watermonitor.model.pojo.Station">
+        SELECT id, name, location, warn_level, danger_level, status, created_at, updated_at
+        FROM station
+        WHERE id = #{id}
+    </select>
+    
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO station (name, location, warn_level, danger_level, status)
+        VALUES (#{name}, #{location}, #{warnLevel}, #{dangerLevel}, #{status})
+    </insert>
+    
+    <update id="update">
+        UPDATE station
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="location != null">location = #{location},</if>
+            <if test="warnLevel != null">warn_level = #{warnLevel},</if>
+            <if test="dangerLevel != null">danger_level = #{dangerLevel},</if>
+            <if test="status != null">status = #{status}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    
+    <update id="updateStatus">
+        UPDATE station SET status = #{status} WHERE id = #{id}
+    </update>
+    
+</mapper>
